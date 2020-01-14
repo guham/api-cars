@@ -1,0 +1,1555 @@
+{
+	"info": {
+		"_postman_id": "76f0e121-a069-4ca4-a80e-1029c0ffda58",
+		"name": "Cars API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Find cars",
+			"item": [
+				{
+					"name": "Find cars - default",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 200 status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be equal to 'Cars found'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql('Cars found');",
+									"});",
+									"",
+									"pm.test(\"Should returns 10 cars by default\", function () {",
+									"    pm.expect(pm.response.json().data.length).to.eql(10);",
+									"});",
+									"",
+									"pm.test(\"Should contains a pagination object\", function () {",
+									"    const pagination = pm.response.json()._pagination;",
+									"    pm.expect(pagination).to.be.an('object');",
+									"    pm.expect(pagination.total_records).to.be.above(0);",
+									"    pm.expect(pagination.page_size).to.eql(10);",
+									"    pm.expect(pagination.page_number).to.eql(1);",
+									"    pm.expect(pagination._links).to.be.an('object');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - brand filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns only Ford cars\", function () {",
+									"    const data = pm.response.json().data;",
+									"    data.forEach(car => {",
+									"        pm.expect(car.brand).to.eql('Ford');",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?brand[eq]=Ford&order=brand&order_type=asc&per_page=100",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "brand[eq]",
+									"value": "Ford"
+								},
+								{
+									"key": "order",
+									"value": "brand"
+								},
+								{
+									"key": "order_type",
+									"value": "asc"
+								},
+								{
+									"key": "per_page",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - model filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should return cars whose model contains 500\", function () {",
+									"    const data = pm.response.json().data;",
+									"    data.forEach(car => {",
+									"        pm.expect(car.model).to.include(\"500\");",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?model[contains]=500&order=brand&order_type=asc&per_page=100",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "model[contains]",
+									"value": "500"
+								},
+								{
+									"key": "order",
+									"value": "brand"
+								},
+								{
+									"key": "order_type",
+									"value": "asc"
+								},
+								{
+									"key": "per_page",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - color filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should return cars whose color is green\", function () {",
+									"    const data = pm.response.json().data;",
+									"    data.forEach(car => {",
+									"        pm.expect(car.color.toLowerCase()).to.eql(\"green\");",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?color[eq]=green&order=brand&order_type=asc&per_page=100",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "color[eq]",
+									"value": "green"
+								},
+								{
+									"key": "order",
+									"value": "brand"
+								},
+								{
+									"key": "order_type",
+									"value": "asc"
+								},
+								{
+									"key": "per_page",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - vin filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should return cars whose color is green\", function () {",
+									"    const data = pm.response.json().data;",
+									"    pm.expect(data.length).to.eql(1);",
+									"    pm.expect(data[0].vin).to.eql(\"YV1982BW7A1444656\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?vin[eq]=YV1982BW7A1444656",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "vin[eq]",
+									"value": "YV1982BW7A1444656"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - year filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should return cars whose year is greater than 2012\", function () {",
+									"    const data = pm.response.json().data;",
+									"    data.forEach(car => {",
+									"        pm.expect(car.year).to.be.above(2012);",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?year[gt]=2012&order=brand&order_type=asc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "year[gt]",
+									"value": "2012"
+								},
+								{
+									"key": "order",
+									"value": "brand"
+								},
+								{
+									"key": "order_type",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - combinated filters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should return Ford cars whose model contains 15\", function () {",
+									"    const data = pm.response.json().data;",
+									"    data.forEach(car => {",
+									"        pm.expect(car.brand.toLowerCase()).to.eql(\"ford\");",
+									"        pm.expect(car.model).to.include(\"15\");",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?brand[eq]=ford&model[contains]=15&order=brand&order_type=asc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "brand[eq]",
+									"value": "ford"
+								},
+								{
+									"key": "model[contains]",
+									"value": "15"
+								},
+								{
+									"key": "order",
+									"value": "brand"
+								},
+								{
+									"key": "order_type",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - order filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should return cars ordered by model DESC\", function () {",
+									"    const data = pm.response.json().data;",
+									"    pm.expect(data.every((car, i, arr) => !i || (car.model <= arr[i - 1].model))).to.be.true;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?order=model&order_type=desc",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "model"
+								},
+								{
+									"key": "order_type",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - per_page filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns 25 cars\", function () {",
+									"    pm.expect(pm.response.json().data.length).to.eql(25);",
+									"});",
+									"",
+									"pm.test(\"Page size value should be 25\", function () {",
+									"    const pagination = pm.response.json()._pagination;",
+									"    pm.expect(pagination.page_size).to.eql(25);",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?order=brand&order_type=asc&per_page=25",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "brand"
+								},
+								{
+									"key": "order_type",
+									"value": "asc"
+								},
+								{
+									"key": "per_page",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find cars - page filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Page number value should be 2\", function () {",
+									"    const pagination = pm.response.json()._pagination;",
+									"    pm.expect(pagination.page_number).to.eql(2);",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars?page=2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Get car",
+			"item": [
+				{
+					"name": "Get car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 200 status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be equal to 'Car found'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql('Car found');",
+									"});",
+									"",
+									"pm.test(\"Should returns the car object\", function () {",
+									"    const car = pm.response.json().data;",
+									"    pm.expect(car).to.be.an('object');",
+									"    pm.expect(car.id).to.be.an('string');",
+									"    pm.expect(car.brand).to.be.an('string');",
+									"    pm.expect(car.model).to.be.an('string');",
+									"    pm.expect(car.year).to.be.an('number');",
+									"    pm.expect(car.color).to.be.an('string');",
+									"    pm.expect(car.vin).to.be.an('string');",
+									"    pm.expect(car.createdAt).to.be.an('string');",
+									"    pm.expect(car.updatedAt).to.be.an('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/6efc9550-34d9-4950-a723-7cadad105a0c",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"6efc9550-34d9-4950-a723-7cadad105a0c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get car - bad id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 400 status code\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be explicit\", function () {",
+									"    pm.expect(pm.response.json().message).to.include(\"Invalid body\");",
+									"});",
+									"",
+									"pm.test(\"Should returns an errors array\", function () {",
+									"    pm.expect(pm.response.json().errors).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Error object should contains unvalid parameter name and failed constraint\", function () {",
+									"    const errors = pm.response.json().errors;",
+									"    const error = errors[0];",
+									"    pm.expect(error).to.be.an('object');",
+									"    pm.expect(error.field).to.eql('id');",
+									"    pm.expect(error.constraints).to.be.an('object');",
+									"    pm.expect(error.constraints.isUuid).to.include('must be a valid UUID');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/12",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get car - inexistant car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 404 status code\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'NotFoundError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"NotFoundError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be 'Car not found.'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql(\"Car not found.\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"3fa85f64-5717-4562-b3fc-2c963f66afa6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Create car",
+			"item": [
+				{
+					"name": "Create car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 201 status code\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be equal to 'Car created'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql('Car created');",
+									"});",
+									"",
+									"pm.test(\"Should returns the car object\", function () {",
+									"    const car = pm.response.json().data;",
+									"    pm.expect(car).to.be.an('object');",
+									"    pm.expect(car.id).to.be.an('string');",
+									"    pm.expect(car.brand).to.be.an('string');",
+									"    pm.expect(car.model).to.be.an('string');",
+									"    pm.expect(car.year).to.be.an('number');",
+									"    pm.expect(car.color).to.be.an('string');",
+									"    pm.expect(car.vin).to.be.an('string');",
+									"    pm.expect(car.createdAt).to.be.an('string');",
+									"    pm.expect(car.updatedAt).to.be.an('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b625fcfa-c7a8-4935-897f-127bd1451aec",
+								"exec": [
+									"var uuid = require('uuid');",
+									"",
+									"pm.environment.set('randomVin', uuid.v4().slice(1, 18));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"Ford\",\n  \"model\": \"E150\",\n  \"year\": 2011,\n  \"color\": \"Orange\",\n  \"vin\": \"{{randomVin}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create car - bad body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 400 status code\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'BadRequestError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"BadRequestError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be explicit\", function () {",
+									"    pm.expect(pm.response.json().message).to.include(\"Invalid body\");",
+									"});",
+									"",
+									"pm.test(\"Should returns an errors array\", function () {",
+									"    pm.expect(pm.response.json().errors).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Error objects should contains unvalid field name and failed constraint\", function () {",
+									"    const errors = pm.response.json().errors;",
+									"    pm.expect(errors.length).to.eql(2);",
+									"    ",
+									"    const yearError = errors[0];",
+									"    pm.expect(yearError).to.be.an('object');",
+									"    pm.expect(yearError.field).to.eql('year');",
+									"    pm.expect(yearError.constraints).to.be.an('object');",
+									"    pm.expect(yearError.constraints.isNotEmpty).to.include('should not be empty');",
+									"    ",
+									"    const vinError = errors[1];",
+									"    pm.expect(vinError).to.be.an('object');",
+									"    pm.expect(vinError.field).to.eql('vin');",
+									"    pm.expect(vinError.constraints).to.be.an('object');",
+									"    pm.expect(vinError.constraints.isNotEmpty).to.include('should not be empty');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"Ford\",\n  \"model\": \"E150\",\n  \"color\": \"Orange\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create car - already exist car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 409 status code\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'ConflictError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"ConflictError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be 'Car VIN must be unique'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql(\"Car VIN must be unique\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"Ford\",\n  \"model\": \"E150\",\n  \"year\": 2011,\n  \"color\": \"Orange\",\n  \"vin\": \"WBAKX6C52CC102155\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Update car",
+			"item": [
+				{
+					"name": "Update car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 200 status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be equal to 'Car updated'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql('Car updated');",
+									"});",
+									"",
+									"pm.test(\"Should returns the updated car object\", function () {",
+									"    const car = pm.response.json().data;",
+									"    pm.expect(car).to.be.an('object');",
+									"    pm.expect(car.id).to.be.an('string');",
+									"    pm.expect(car.brand).to.be.an('string');",
+									"    pm.expect(car.model).to.be.an('string');",
+									"    pm.expect(car.year).to.be.an('number');",
+									"    pm.expect(car.color).to.be.an('string');",
+									"    pm.expect(car.vin).to.be.an('string');",
+									"    pm.expect(car.createdAt).to.be.an('string');",
+									"    pm.expect(car.updatedAt).to.be.an('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"Ford\",\n  \"model\": \"E150\",\n  \"year\": 2012,\n  \"color\": \"Blue\",\n  \"vin\": \"WBAKC6C2CC1021455\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/d42a3b55-1857-426e-af31-2ef3cfee9bc9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"d42a3b55-1857-426e-af31-2ef3cfee9bc9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update car - bad body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 400 status code\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'BadRequestError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"BadRequestError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be explicit\", function () {",
+									"    pm.expect(pm.response.json().message).to.include(\"Invalid body\");",
+									"});",
+									"",
+									"pm.test(\"Should returns an errors array\", function () {",
+									"    pm.expect(pm.response.json().errors).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Error objects should contains unvalid field name and failed constraint\", function () {",
+									"    const errors = pm.response.json().errors;",
+									"    pm.expect(errors.length).to.eql(2);",
+									"    ",
+									"    const yearError = errors[0];",
+									"    pm.expect(yearError).to.be.an('object');",
+									"    pm.expect(yearError.field).to.eql('year');",
+									"    pm.expect(yearError.constraints).to.be.an('object');",
+									"    pm.expect(yearError.constraints.isNotEmpty).to.include('should not be empty');",
+									"    ",
+									"    const vinError = errors[1];",
+									"    pm.expect(vinError).to.be.an('object');",
+									"    pm.expect(vinError.field).to.eql('vin');",
+									"    pm.expect(vinError.constraints).to.be.an('object');",
+									"    pm.expect(vinError.constraints.isNotEmpty).to.include('should not be empty');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"Ford\",\n  \"model\": \"E150\",\n  \"color\": \"Orange\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/d42a3b55-1857-426e-af31-2ef3cfee9bc9",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"d42a3b55-1857-426e-af31-2ef3cfee9bc9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update car - inexistant car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 404 status code\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'NotFoundError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"NotFoundError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be 'Car not found.'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql(\"Car not found.\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"3fa85f64-5717-4562-b3fc-2c963f66afa6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update car - already exist car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 409 status code\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'ConflictError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"ConflictError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be 'Car VIN must be unique'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql(\"Car VIN must be unique\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"brand\": \"Ford\",\n  \"model\": \"E150\",\n  \"year\": 2011,\n  \"color\": \"Orange\",\n  \"vin\": \"JA4AP3AU5BZ606695\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/6efc9550-34d9-4950-a723-7cadad105a0c",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"6efc9550-34d9-4950-a723-7cadad105a0c"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Delete car",
+			"item": [
+				{
+					"name": "Delete car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 200 status code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be equal to 'Car deleted'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql('Car deleted');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d91c33ca-6c78-476c-b571-61656d684dd5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/d1dfd3bd-5ad2-4f8c-bfe0-797b4652984f",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"d1dfd3bd-5ad2-4f8c-bfe0-797b4652984f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete car - bad id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 400 status code\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response message field should be explicit\", function () {",
+									"    pm.expect(pm.response.json().message).to.include(\"Invalid body\");",
+									"});",
+									"",
+									"pm.test(\"Should returns an errors array\", function () {",
+									"    pm.expect(pm.response.json().errors).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Error object should contains unvalid parameter name and failed constraint\", function () {",
+									"    const errors = pm.response.json().errors;",
+									"    const error = errors[0];",
+									"    pm.expect(error).to.be.an('object');",
+									"    pm.expect(error.field).to.eql('id');",
+									"    pm.expect(error.constraints).to.be.an('object');",
+									"    pm.expect(error.constraints.isUuid).to.include('must be a valid UUID');",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/56",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"56"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete car - inexistant car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6718d38b-7d13-4719-a0ff-4b9f6b734876",
+								"exec": [
+									"pm.test(\"Should returns a 404 status code\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Should returns a valid JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response name field should be 'NotFoundError'\", function () {",
+									"    pm.expect(pm.response.json().name).to.eql(\"NotFoundError\");",
+									"});",
+									"",
+									"pm.test(\"Response message field should be 'Car not found.'\", function () {",
+									"    pm.expect(pm.response.json().message).to.eql(\"Car not found.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/2864da33-556b-4273-8449-1487929ca13c",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"2864da33-556b-4273-8449-1487929ca13c"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Upload CSV",
+			"item": [
+				{
+					"name": "Upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:3000/api/v1/cars/upload",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b2f5a179-e3b3-4efd-af59-40dedaab4828",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "342fc672-9666-4b23-98fe-bd36966c72eb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,1 @@
+export { CarRepository } from './CarRepository';

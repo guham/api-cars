@@ -1,0 +1,5 @@
+FROM postgres:11-alpine
+
+ARG TYPEORM_PORT=5432
+
+EXPOSE ${TYPEORM_PORT}
