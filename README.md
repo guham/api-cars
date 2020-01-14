@@ -13,11 +13,11 @@ Before you start, make sure you have a recent version of [Docker](https://docs.d
 Clone this project and go into it:
 
 ```bash
-git clone git@github.com:guham/cars-api.git
+git clone git@github.com:guham/api-cars.git
 ```
 
 ```bash
-cd cars-api
+cd api-cars
 ```
 
 Copy the `.env.example` file and rename it to `.env`:
@@ -52,7 +52,7 @@ The API is now ready on <http://127.0.0.1:3000/api/v1>.
 
 2 options:
 
-1. put the cars CSV (filename must be **MOCK_DATA.csv**) into the data folder (`cars-api/data`) and then seed the database:
+1. put the cars CSV (filename must be **MOCK_DATA.csv**) into the data folder (`api-cars/data`) and then seed the database:
 
 ```bash
 docker-compose exec api yarn start db.seed
@@ -81,4 +81,4 @@ Default HTTP basic auth login/password: admin/1234
 
 ### With Postman
 
-- Import the `cars-api/Cars_API.postman_collection.json` file into Postman
+- Import the `api-cars/Cars_API.postman_collection.json` file into Postman
