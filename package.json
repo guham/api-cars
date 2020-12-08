@@ -28,7 +28,7 @@
     "express-basic-auth": "^1.1.7",
     "express-status-monitor": "^1.0.1",
     "faker": "^4.1.0",
-    "fast-csv": "^4.0.2",
+    "fast-csv": "^4.3.6",
     "figlet": "^1.2.0",
     "file-extension": "^4.0.5",
     "glob": "^7.1.2",
